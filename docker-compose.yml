@@ -17,6 +17,9 @@ services:
     depends_on:
       - backend
       - frontend
+    volumes:
+      - static_vol:/www/staticfiles
+
   backend:
     image: classroom-conversation/backend:prod
     build:
@@ -34,6 +37,7 @@ services:
     volumes:
       - static_vol:/app/staticfiles
       - media_vol:/app/mediafiles
+
   frontend:
     image: classroom-conversation/frontend:prod
     build:
@@ -43,6 +47,7 @@ services:
     restart: always
     depends_on:
       - backend
+
   db:
     image: postgres
     container_name: db
