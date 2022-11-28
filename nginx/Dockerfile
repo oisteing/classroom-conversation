@@ -18,6 +18,9 @@ RUN mkdir -p /tmp/nginx && \
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
 
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
 USER nginx
 
 FROM base AS development
