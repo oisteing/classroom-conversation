@@ -100,6 +100,12 @@
         <button hidden id="language-button" type="submit">{% trans "form.label.button.language" %}</button>
       </form>
 
+      <a
+        class="nav-item nav-link {% if request.get_full_path == '/admin' %}active{% endif %}"
+        href="/admin"
+        >{% trans "navigation.administration" %}</a
+      >
+
       <div>
         {% if user.is_authenticated %}
           <span class="navbar-text">{% trans "profile.hello" %} {{ user.username}}!</span>
