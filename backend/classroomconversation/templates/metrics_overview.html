@@ -11,6 +11,7 @@
     <th>ID</th>
     <th>{% trans "table.label.conversation" %}</th>
     <th></th>
+    <th></th>
   </tr>
   {% for conversation in conversations %}
   <tr>
@@ -18,6 +19,9 @@
     <td>{{ conversation.name }}</td>
     <td>
       <a href="/metrics/{{ conversation.uuid }}">{% trans "navigation.view_metrics" %}</a>
+    </td>
+    <td>
+      <a href="/metrics/{{ conversation.uuid }}/export">{% trans "navigation.export_metrics" %}</a>
     </td>
   </tr>
   {% endfor %}

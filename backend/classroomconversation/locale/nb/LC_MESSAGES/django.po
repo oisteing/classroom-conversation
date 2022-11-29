@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-29 18:44+0000\n"
+"POT-Creation-Date: 2022-11-29 19:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,6 +79,14 @@ msgstr "Frekvens"
 
 #: conversation/helpers.py:305
 msgid "heatmap.label.number"
+msgstr "Valg"
+
+#: conversation/helpers.py:327
+msgid "csv.date"
+msgstr "Dato"
+
+#: conversation/helpers.py:328 conversation/views.py:160
+msgid "table.label.choice"
 msgstr "Valg"
 
 #: conversation/validation.py:95
@@ -166,6 +174,10 @@ msgstr "Alle samtaler"
 msgid "table.label.conversation"
 msgstr "Samtale"
 
+#: templates/metrics_overview.html:23
+msgid "navigation.export_metrics"
+msgstr "Eksporter (CSV)"
+
 #: templates/metrics_view.html:7
 msgid "metrics.responses_for"
 msgstr "Responser for"
@@ -176,9 +188,6 @@ msgstr "Last opp"
 
 #~ msgid "navigation.upload"
 #~ msgstr "Last opp"
-
-#~ msgid "table.label.choice"
-#~ msgstr "Valg"
 
 #~ msgid "table.action.show_metrics"
 #~ msgstr "Vis"

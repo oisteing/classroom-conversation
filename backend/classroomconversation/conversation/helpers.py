@@ -317,3 +317,24 @@ def generate_heatmap_html(completed_conversations) -> str:
     ))
 
     return fig.to_html(full_html=True, default_height="350px")
+
+
+def completed_conversation_to_csv(completed_conversations) -> list:
+    headers = [str(_("csv.date"))]
+
+    if len(completed_conversations) <= 0:
+        return [headers]
+
+    max_len = max([len(conversation.choices) for conversation in completed_conversations])
+    localized_choice_str = _('table.label.choice')
+    headers.extend([f"{localized_choice_str} {i + 1}" for i in range(0, max_len)])
+    lines = [headers]
+    
+    for cc in completed_conversations:
+        line = [cc.created, cc.uuid]
+        for choice_id, choice_details in cc.choices.items():
+            choice_text = choice_details.get("choice").strip().replace("\n", "")
+            line.append(f"{choice_text} ({choice_id})")
+        lines.append(line)
+    
+    return lines
