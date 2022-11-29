@@ -1,11 +1,13 @@
 import uuid
+from datetime import datetime
+import csv
 
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework import viewsets, mixins
 
 from django.shortcuts import render, redirect
 from django.core.files import File
-from django.http import FileResponse, HttpResponseNotFound
+from django.http import FileResponse, HttpResponseNotFound, HttpResponse
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -14,7 +16,7 @@ from .forms import ConversationForm, IllustrationForm
 from .models import Conversation, Illustration, CompletedConversation
 from .serializers import ConversationSerializer, IllustrationSerializer, CompletedConversationSerializer
 from .parser import graphml_to_json
-from .helpers import generate_heatmap_html
+from .helpers import generate_heatmap_html, completed_conversation_to_csv
 
 LOGIN_URL = "/account/login/"
 
@@ -157,8 +159,35 @@ def metrics_view(request, uuid):
             # find the longest conversation
             if completed_conversations.count() >= 1:
                 max_len = max([len(conversation.choices) for conversation in completed_conversations])
-                table_headers.extend([f"{_('table.label.choice')} {i + 1}" for i in range(0, max_len)])
+                localized_choice_str = _('table.label.choice')
+                table_headers.extend([f"{localized_choice_str} {i + 1}" for i in range(0, max_len)])
 
             return render(request, "metrics_view.html", {"conversation_name": conversation_name, "completed_conversations": completed_conversations, "table_headers": table_headers, "heatmap": heatmap})
     
+    return HttpResponseNotFound()
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def metrics_export(request, uuid):
+    if request.method == "GET":
+        try:
+            conversation_name = Conversation.objects.filter(uuid=uuid).first().name
+        except:
+            # in the event that the conversastion has been deleted
+            conversation_name = uuid
+        completed_conversations = CompletedConversation.objects.filter(conversation=uuid).order_by("-created")
+        now = datetime.now().isoformat()
+        data = completed_conversation_to_csv(completed_conversations)
+        filename = f"export_metrics_{conversation_name}-{uuid}_{now}.csv"
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+
+        writer = csv.writer(response)
+        writer.writerows(data)
+
+        return response
+
     return HttpResponseNotFound()
