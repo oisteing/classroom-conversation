@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-23 21:04+0000\n"
+"POT-Creation-Date: 2022-11-29 18:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -126,7 +126,11 @@ msgstr "Vis statistikk"
 msgid "form.label.button.language"
 msgstr "Bytt  "
 
-#: templates/base.html:105
+#: templates/base.html:106
+msgid "navigation.administration"
+msgstr "Administrasjon"
+
+#: templates/base.html:111
 msgid "profile.hello"
 msgstr "Hei, "
 
