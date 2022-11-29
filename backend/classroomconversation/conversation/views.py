@@ -7,7 +7,7 @@ from rest_framework import viewsets, mixins
 
 from django.shortcuts import render, redirect
 from django.core.files import File
-from django.http import FileResponse, HttpResponseNotFound, HttpResponse
+from django.http import FileResponse, HttpResponseNotFound, HttpResponse, HttpResponseServerError
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -191,3 +191,17 @@ def metrics_export(request, uuid):
         return response
 
     return HttpResponseNotFound()
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def metrics_delete(request, uuid):
+    if request.method == "POST":
+        try:
+            CompletedConversation.objects.filter(conversation=uuid).delete()
+            return redirect("metrics_overview")
+        except:
+            return HttpResponseServerError()
+
+    return HttpResponseNotFound()
+        
