@@ -25,5 +25,6 @@ urlpatterns = [
     path("illustrations/add", views.add_illustration, name="illustrations_add"),
     path("metrics", views.metrics_overview, name="metrics_overview"),
     path("metrics/<uuid>", views.metrics_view, name="metrics_view"),
-    path("metrics/<uuid>/export", views.metrics_export, name="metrics_export")
+    path("metrics/<uuid>/export", views.metrics_export, name="metrics_export"),
+    path("metrics/<uuid>/delete", views.metrics_delete, name="metrics_delete")
 ]

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-29 19:34+0000\n"
+"POT-Creation-Date: 2022-11-29 20:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,11 +81,11 @@ msgstr "Frekvens"
 msgid "heatmap.label.number"
 msgstr "Valg"
 
-#: conversation/helpers.py:327
+#: conversation/helpers.py:323
 msgid "csv.date"
 msgstr "Dato"
 
-#: conversation/helpers.py:328 conversation/views.py:160
+#: conversation/helpers.py:329 conversation/views.py:162
 msgid "table.label.choice"
 msgstr "Valg"
 
@@ -97,7 +97,7 @@ msgstr "Det finnes ingen startnode (stjerne)"
 msgid "validation.doc.multi.star"
 msgstr "Det finnes flere startnoder (stjerne). Det kan kun eksistere én"
 
-#: conversation/views.py:156 templates/conversation_list.html:9
+#: conversation/views.py:158 templates/conversation_list.html:9
 #: templates/illustration_list.html:9
 msgid "table.label.date"
 msgstr "Dato"
@@ -126,7 +126,7 @@ msgstr "Alle illustrasjoner"
 msgid "navigation.upload_illustration"
 msgstr "Last opp illustrasjon"
 
-#: templates/base.html:83 templates/metrics_overview.html:20
+#: templates/base.html:83 templates/metrics_overview.html:30
 msgid "navigation.view_metrics"
 msgstr "Vis statistikk"
 
@@ -166,17 +166,21 @@ msgstr "Kopier"
 msgid "table.label.filename"
 msgstr "Filnavn"
 
-#: templates/metrics_overview.html:7
+#: templates/metrics_overview.html:16
 msgid "metrics.conversations"
 msgstr "Alle samtaler"
 
-#: templates/metrics_overview.html:12
+#: templates/metrics_overview.html:21
 msgid "table.label.conversation"
 msgstr "Samtale"
 
-#: templates/metrics_overview.html:23
+#: templates/metrics_overview.html:33
 msgid "navigation.export_metrics"
 msgstr "Eksporter (CSV)"
+
+#: templates/metrics_overview.html:38
+msgid "navigation.delete_metrics"
+msgstr "Slett registrerte samtaler"
 
 #: templates/metrics_view.html:7
 msgid "metrics.responses_for"

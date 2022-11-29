@@ -12,6 +12,7 @@
     <th>{% trans "table.label.conversation" %}</th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
   {% for conversation in conversations %}
   <tr>
@@ -22,6 +23,12 @@
     </td>
     <td>
       <a href="/metrics/{{ conversation.uuid }}/export">{% trans "navigation.export_metrics" %}</a>
+    </td>
+    <td>
+      <form class="delete-metrics" action="/metrics/{{ conversation.uuid }}/delete" method="post">
+        {% csrf_token %}
+        <button type="submit">{% trans "navigation.delete_metrics" %}</button>
+      </form>
     </td>
   </tr>
   {% endfor %}
