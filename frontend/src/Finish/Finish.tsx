@@ -30,6 +30,8 @@ import {
 } from '@react-pdf/renderer'
 import { useLocalStorage } from '../hooks'
 import { NODE_SHAPE } from '../const'
+import { useTranslation } from 'react-i18next'
+import { t } from 'i18next'
 
 Font.register({
   family: 'opensans',
@@ -136,48 +138,52 @@ const PDFDocument = ({
   responses,
   student,
   teacher,
-}: PDFProps) => (
-  <Document>
-    <Page size="A4" style={styles.introPage}>
-      <Text style={styles.conversatioName}>{name}</Text>
-      <Text style={styles.conversationDescription}>{intro}</Text>
+}: PDFProps) => {
+  const { t } = useTranslation()
 
-      <Image style={styles.teacher} src={teacher} />
-      <Image style={styles.student} src={student} />
-      <Text style={styles.conversationDate}>Dato: {getDate()}</Text>
-    </Page>
+  return (
+    <Document>
+      <Page size="A4" style={styles.introPage}>
+        <Text style={styles.conversatioName}>{name}</Text>
+        <Text style={styles.conversationDescription}>{intro}</Text>
 
-    <Page size="A4" style={styles.page}>
-      {dialog.map((q, i) => {
-        const choice: Choice = choices[q]
-        const response: Response = responses[choices[q].selectedResponse]
+        <Image style={styles.teacher} src={teacher} />
+        <Image style={styles.student} src={student} />
+        <Text style={styles.conversationDate}>{t('date')}: {getDate()}</Text>
+      </Page>
 
-        return (
-          <View key={i} style={styles.section}>
-            {choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE ? (
-              <Image style={styles.illustration} src={choice.label} />
-            ) : (
-              <Text style={styles.choice}>
-                {i < dialog.length - 1 ? `Lærer ${i + 1}: ` : `Avslutning: `}
-                {choice.label}
-              </Text>
-            )}
-            {choice && response && i < dialog.length - 1 && (
-              <Text style={styles.response}>
-                Elev: {response ? response.label : ''}
-              </Text>
-            )}
-          </View>
-        )
-      })}
-    </Page>
-    <Page size="A4">
-      <View style={styles.notes}>
-        <Text style={styles.header}>Notater:</Text>
-      </View>
-    </Page>
-  </Document>
-)
+      <Page size="A4" style={styles.page}>
+        {dialog.map((q, i) => {
+          const choice: Choice = choices[q]
+          const response: Response = responses[choices[q].selectedResponse]
+
+          return (
+            <View key={i} style={styles.section}>
+              {choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE ? (
+                <Image style={styles.illustration} src={choice.label} />
+              ) : (
+                <Text style={styles.choice}>
+                  {i < dialog.length - 1 ? `${t('teacher')} ${i + 1}: ` : `${t('conversation.end')}: `}
+                  {choice.label}
+                </Text>
+              )}
+              {choice && response && i < dialog.length - 1 && (
+                <Text style={styles.response}>
+                  {t('pupil')}: {response ? response.label : ''}
+                </Text>
+              )}
+            </View>
+          )
+        })}
+      </Page>
+      <Page size="A4">
+        <View style={styles.notes}>
+          <Text style={styles.header}>{t('notes')}:</Text>
+        </View>
+      </Page>
+    </Document>
+  )
+}
 
 const Finish = ({ name, intro, choices, responses }: FinishProps) => {
   const history = useHistory()
@@ -200,7 +206,7 @@ const Finish = ({ name, intro, choices, responses }: FinishProps) => {
 
   return (
     <StyledFinish>
-      <h1>Samtalen er nå ferdig!</h1>
+      <h1>{t('conversation.conversation_is_now_over')}</h1>
       <div>
         <button
           className='btn-dark'
@@ -209,7 +215,7 @@ const Finish = ({ name, intro, choices, responses }: FinishProps) => {
             history.push('/conversation/' + uuid + '/start')
           }}
         >
-          Start samtalen på ny
+          {t('conversation.conversation_start_over')}
         </button>
 
         <PDFDownloadLink
@@ -228,12 +234,12 @@ const Finish = ({ name, intro, choices, responses }: FinishProps) => {
           fileName={pdfFileName}
         >
           {({ loading }: { loading: boolean }) =>
-            loading ? 'Loading document...' : 'Last ned samtale'
+            loading ? t('conversation.loading_document') : t('conversation.download_conversation')
           }
         </PDFDownloadLink>
 
         <button className='btn-dark' onClick={() => history.push('/browse/')}>
-          Velg ny samtale
+          {t('conversation.conversation_select_new')}
         </button>
       </div>
 
