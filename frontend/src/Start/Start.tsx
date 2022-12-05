@@ -18,6 +18,7 @@ import StyledStart from './Start.styled'
 
 import teacherWoman from './../static/teacher_woman.png'
 import teacherMan from './../static/teacher_man.png'
+import { useTranslation } from 'react-i18next'
 
 const selectAvatar = (id: number, setAvatar: Function) => {
   window.localStorage.setItem('avatar', '' + id)
@@ -30,6 +31,7 @@ const Start = () => {
   const [selectedAvatar, setAvatar] = useState<number>(getSelectedAvatar())
   const [hasSubmitted, setHasSubmitted] =
     useLocalStorage<boolean>('hasSubmitted')
+  const { t } = useTranslation()
 
   const [data, loading] = useFetchAndStoreConversation<Conversation>(
     `/api/document/${uuid}`,
@@ -80,7 +82,7 @@ const Start = () => {
               )
             }}
           >
-            {hasDialog ? 'Start samtalen på ny' : 'Start undervisningen'}
+            {hasDialog ? t('conversation.conversation_start_over') : t('conversation.start_lecture')}
           </button>
           {hasDialog && (
             <button
@@ -91,7 +93,7 @@ const Start = () => {
                 )
               }
             >
-              Fortsett der du slapp
+              {t('conversation.continue_where_you_left_of')}
             </button>
           )}
         </div>

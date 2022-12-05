@@ -1,5 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { StyledBrowse, StyledLinks } from './Browse.styled'
 
@@ -10,6 +11,7 @@ import { Conversation } from '../types'
 
 const Browse = () => {
   const history = useHistory()
+  const { t } = useTranslation()
 
   const [data, loading] = useFetch<Array<Conversation>>('/api/document')
 
@@ -23,7 +25,7 @@ const Browse = () => {
 
   return (
     <StyledBrowse>
-      <h1>Alle samtaler</h1>
+      <h1>{t('all_conversations')}</h1>
 
       <StyledLinks>
         {data.map((conversation: Conversation, index: number) => (

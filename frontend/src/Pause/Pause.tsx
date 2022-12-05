@@ -9,10 +9,12 @@ import teacherWoman from './../static/teacher_woman.png'
 import teacherMan from './../static/teacher_man.png'
 
 import { StyledPause, StyledAlternatives } from './Pause.styled'
+import { useTranslation } from 'react-i18next'
 
 const Pause = ({ uuid, id, next, current }: PauseProps) => {
   const history = useHistory()
   const avatar = getSelectedAvatar()
+  const { t } = useTranslation()
 
   return (
     <StyledPause>
@@ -34,7 +36,7 @@ const Pause = ({ uuid, id, next, current }: PauseProps) => {
         key="student"
         className="student"
       >
-        La oss fortsette til neste spørsmål!
+        {t('conversation.next_question')}
       </motion.h2>
 
       <StyledAlternatives>

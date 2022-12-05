@@ -18,6 +18,7 @@ import teacherMan from './../static/teacher_man.png'
 
 import { StyledConversation } from './Question.styled'
 import { NODE_SHAPE } from '../const'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   graph: Graph
@@ -84,6 +85,7 @@ const getAllIllustrations = (choice: Choice, randomResponse: Response, linkedRes
 const QuestionComponent = ({ graph, uuid, id }: Props) => {
   const history = useHistory()
   const { choice, randomResponse, linkedResponses, illustrations } = buildConversation(id, graph)
+  const { t } = useTranslation()
   
   // Avatars
   const avatar = getSelectedAvatar()
@@ -122,7 +124,7 @@ const QuestionComponent = ({ graph, uuid, id }: Props) => {
             key={`teacher${id}`}
             className="teacher"
           >
-            {choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE ? 'Illustrasjon på tavla' : choice.label}
+            {choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE ? t('conversation.illustration_on_blackboard') : choice.label}
           </motion.h2>
         </div>
         <div className='answers'>
@@ -164,7 +166,7 @@ const QuestionComponent = ({ graph, uuid, id }: Props) => {
             <img
               className="illustration"
               src={illustration.label}
-              alt={illustration.label || 'Illustration'}
+              alt={illustration.label || `${t('conversation.illustration')}`}
             />
           )}
         </div>
@@ -190,7 +192,7 @@ const QuestionComponent = ({ graph, uuid, id }: Props) => {
                     history.push(`/conversation/${uuid}/${choice.id}`)
                   }
                 >
-                  <p>{choice.label || 'Missing node label'}</p>
+                  <p>{choice.label || t('conversation.missing_node_label')}</p>
                 </motion.button>
               ))}
             </>

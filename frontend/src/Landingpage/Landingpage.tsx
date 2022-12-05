@@ -1,24 +1,26 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import StyledLandingpage from './Landingpage.styled'
 
 const Landingpage = () => {
   const history = useHistory()
+  const { t } = useTranslation()
 
   return (
     <StyledLandingpage>
       <div>
-        <h1>Digitalt klasserom</h1>
-        <p>En introduksjon til hva som skjer på siden</p>
+        <h1>{t('landingpage.title')}</h1>
+        <p>{t('landingpage.intro.part1')}</p>
 
-        <p>Er du her for å øve? Ta en titt på alle tilgjengelige samtaler!</p>
+        <p>{t('landingpage.intro.part2')}</p>
         <br></br>
         <br></br>
-        <button className='btn-dark' onClick={() => history.push('/browse')}>Alle samtaler</button>
+        <button className='btn-dark' onClick={() => history.push('/browse')}>{t('see_all_conversations')}</button>
       </div>
       <p className="credits" onClick={() => history.push('/credits')}>
-        (Krediteringer)
+        ({t('credits')})
       </p>
     </StyledLandingpage>
   )
