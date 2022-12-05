@@ -331,7 +331,7 @@ def completed_conversation_to_csv(completed_conversations) -> list:
     lines = [headers]
     
     for cc in completed_conversations:
-        line = [cc.created, cc.uuid]
+        line = [cc.created]
         for choice_id, choice_details in cc.choices.items():
             choice_text = choice_details.get("choice").strip().replace("\n", "")
             line.append(f"{choice_text} ({choice_id})")
