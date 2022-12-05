@@ -10,6 +10,7 @@ import Start from './Start/Start'
 import Browse from './Browse/Browse'
 import Credits from './Credits/Credits'
 import NotFound from './Notfound/Notfound'
+import { Header } from './Design/Header'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -54,6 +55,7 @@ function App() {
   return (
     <Router>
       <GlobalStyle />
+      <Header/>
       <Switch>
         <Route exact path="/" component={Landingpage} />
         <Route exact path="/browse" component={Browse} />

@@ -1,9 +1,12 @@
 {
   "name": "classroom-conversation-web",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.3",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.16",
     "@react-pdf/renderer": "^3.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
@@ -21,7 +24,7 @@
     "buffer": "^6.0.3",
     "framer-motion": "^6.3.3",
     "i18next": "^22.0.8",
-    "install": "^0.13.0",
+    "i18next-browser-languagedetector": "^7.0.1",
     "process": "^0.11.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

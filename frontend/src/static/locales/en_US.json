@@ -1,5 +1,8 @@
 {
   "translation": {
+    "nav.admin": "Administration",
+    "nav.select_language": "Select language",
+    "nav.language_picker": "Language",
     "landingpage.title": "Virtual classroom",
     "landingpage.intro.part1": "An introduction to what happens on the website",
     "landingpage.intro.part2": "Are you here to practice? Have a look at all available conversations!",
