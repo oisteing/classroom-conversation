@@ -1,5 +1,8 @@
 {
   "translation": {
+    "nav.admin": "Administrasjon",
+    "nav.select_language": "Velg språk",
+    "nav.language_picker": "Språk",
     "landingpage.title": "Digitalt klasserom",
     "landingpage.intro.part1": "Ein introduksjon til kva som skjer på sida",
     "landingpage.intro.part2": "Er du her for å øva? Ta ein titt på alle tilgjengelege samtalar!",
