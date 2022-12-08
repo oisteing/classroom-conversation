@@ -35,6 +35,9 @@
     "conversation.conversation_select_new": "Vel ny samtale",
     "date": "Dato",
     "nav.page_not_found": "Denne sida finst ikkje",
-    "nav.page_not_found.ensure_correct_link": "Er du sikker på at du har riktig link?"
+    "nav.page_not_found.ensure_correct_link": "Er du sikker på at du har riktig link?",
+    "error.unexpected": "Ein feil oppstod",
+    "item.select": "Vel",
+    "conversations.notfound": "Ingen samtalar vart funne"
   }
 }

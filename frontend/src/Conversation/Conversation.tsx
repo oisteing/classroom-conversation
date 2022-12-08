@@ -14,7 +14,7 @@ import {
 } from '../types'
 import { NODE_SHAPE } from '../const'
 
-import ConversationItemComponent from './../Question/Question'
+import QuestionComponent from './../Question/Question'
 import Finish from './../Finish/Finish'
 import Pause from './../Pause/Pause'
 import Loading from './../Loading/Loading'
@@ -83,7 +83,7 @@ const ConversationComponent = () => {
       />
     )
   }
-  return <ConversationItemComponent graph={graph} uuid={uuid} id={id} />
+  return <QuestionComponent graph={graph} uuid={uuid} id={id} />
 }
 
 export default ConversationComponent

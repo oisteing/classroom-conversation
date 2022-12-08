@@ -1,5 +1,6 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
+import { ThemeProvider } from '@mui/system'
 
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 
@@ -11,6 +12,7 @@ import Browse from './Browse/Browse'
 import Credits from './Credits/Credits'
 import NotFound from './Notfound/Notfound'
 import { Header } from './Design/Header'
+import { theme } from './Design/Theme'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -26,6 +28,11 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-size: 1rem;
+    height: 100%;
+  }
+
+  #root {
+    height: 100%;
   }
   
   h1 {
@@ -55,22 +62,24 @@ function App() {
   return (
     <Router>
       <GlobalStyle />
-      <Header/>
-      <Switch>
-        <Route exact path="/" component={Landingpage} />
-        <Route exact path="/browse" component={Browse} />
-        <Route exact path="/credits" component={Credits} />
+      <ThemeProvider theme={theme}>
+        <Header/>
+        <Switch>
+          <Route exact path="/" component={Landingpage} />
+          <Route exact path="/browse" component={Browse} />
+          <Route exact path="/credits" component={Credits} />
 
-        <Route exact path="/conversation/:uuid/start" component={Start} />
-        <Route
-          exact
-          path="/conversation/:uuid/:id"
-          component={ConversationComponent}
-        />
-        <Route
-          path="*"
-          component={NotFound} />
-      </Switch>
+          <Route exact path="/conversation/:uuid/start" component={Start} />
+          <Route
+            exact
+            path="/conversation/:uuid/:id"
+            component={ConversationComponent}
+          />
+          <Route
+            path="*"
+            component={NotFound} />
+        </Switch>
+      </ThemeProvider>
     </Router>
   )
 }
