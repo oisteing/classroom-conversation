@@ -35,6 +35,9 @@
     "conversation.conversation_select_new": "Pick a new conversation",
     "date": "Date",
     "nav.page_not_found": "This page does not exist",
-    "nav.page_not_found.ensure_correct_link": "Are you sure you have the correct link?"
+    "nav.page_not_found.ensure_correct_link": "Are you sure you have the correct link?",
+    "error.unexpected": "An error occurred",
+    "item.select": "Select",
+    "conversations.notfound": "No conversations were found"
   }
 }

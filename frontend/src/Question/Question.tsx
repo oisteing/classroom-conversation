@@ -1,105 +1,46 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { Paper } from '@mui/material'
+import { styled } from '@mui/material'
+
+import { DialogueComponent } from './Dialogue'
+import { ChoicesComponent } from './Choices'
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
 
 import {
   Graph,
-  Node,
   Choice,
-  Choices,
-  Response,
-  Responses,
   Illustration,
 } from '../types'
-import { getRandomStudents, getSelectedAvatar } from '../helpers'
-
-import teacherWoman from './../static/teacher_woman.png'
-import teacherMan from './../static/teacher_man.png'
-
-import { StyledConversation } from './Question.styled'
+import { getRandomStudents } from '../helpers'
+import { buildConversation, getAllChoices } from './utils'
 import { NODE_SHAPE } from '../const'
-import { useTranslation } from 'react-i18next'
 
-type Props = {
+type QuestionProps = {
   graph: Graph
   uuid: string
   id: string
 }
 
-const buildConversation = (id: string, graph: Graph) => {
-  const allChoices: Choices = graph.choices
-  const allResponses: Responses = graph.responses
+const Background = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  margin: theme.spacing(1),
+  marginBottom: theme.spacing(2),
+  textAlign: 'center',
+}))
 
-  const choice: Choice = allChoices[id]
-  const randomResponse: Response = allResponses[choice.selectedResponse]
-  
-  const linkedResponses: Response[] = []
-  randomResponse?.links.filter((link: Node) => link.shape === NODE_SHAPE.RESPONSE).forEach((response: Node) => linkedResponses.push(allResponses[response.id]))
-
-  const illustrations: Illustration[] = getAllIllustrations(choice, randomResponse, linkedResponses)
-
-  return { choice, randomResponse, linkedResponses, illustrations }
-}
-
-const getAllChoices = (choice: Choice, randomResponse: Response, linkedResponses: Response[], graph: Graph) => {
-  let choices: Choice[] = []
-  
-  const getLinkedChoices = (links: Node[]) => {
-    if (!links) return []
-    return links
-      .filter((link: Node) => [NODE_SHAPE.CHOICE, NODE_SHAPE.ILLUSTRATION_CHOICE].includes(link.shape))
-      .map((link: Node) => graph.choices[link.id])
-  }
-
-  const choiceLinks = getLinkedChoices(choice.responses)
-  const responseLinks = getLinkedChoices(randomResponse?.links)
-  let linkedResponseLinks: Choice[] = []
-  linkedResponses.forEach((linkedResponse: Response) => {
-    linkedResponseLinks = linkedResponseLinks.concat(getLinkedChoices(linkedResponse.links))
-  })
-
-  // TODO: filter duplicates
-  choices = choices.concat(choiceLinks, responseLinks, linkedResponseLinks)
-
-  return choices ?? []
-}
-
-const getAllIllustrations = (choice: Choice, randomResponse: Response, linkedResponses: Response[]) => {
-  let illustrations: Illustration[] = choice.illustrations ?? []
-
-  // Get illustrations linked to the response
-  randomResponse?.illustrations?.forEach((illustration: Illustration) => {
-    // avoid duplicates
-    if (illustrations.filter((_choosableIllustration) => _choosableIllustration.id === illustration.id).length < 1) illustrations.push(illustration)
-  })
-  // Get choosable illustrations linked to the linked responses
-  linkedResponses?.forEach((linkedResponse: Response) => {
-    linkedResponse.illustrations?.forEach((illustration: Illustration) => {
-      if (illustrations.filter((_illustration) => _illustration.id === illustration.id).length < 1) illustrations.push(illustration)
-    })
-  })
-
-  return illustrations
-}
-
-const QuestionComponent = ({ graph, uuid, id }: Props) => {
-  const history = useHistory()
+const QuestionComponent = ({ graph, uuid, id }: QuestionProps) => {
+  // Conversation
   const { choice, randomResponse, linkedResponses, illustrations } = buildConversation(id, graph)
-  const { t } = useTranslation()
-  
   // Avatars
-  const avatar = getSelectedAvatar()
   const [students, setStudents] = useState<string[]>([])
-
-  const [currentChoices, setCurrentChoices] = useState<Choice[]>([])
-  const [currentIllustrationChoices, setCurrentIllustrationChoices] = useState<Choice[]>([])
+  // Choices
+  const [choices, setChoices] = useState<Choice[] | Illustration[]>([])
   const [illustration, setIllustration] = useState<Illustration>()
 
   useEffect(() => {
     // Get choices
-    const choices = getAllChoices(choice, randomResponse, linkedResponses, graph)
-    setCurrentChoices(choices.filter((choice: Choice) => choice.shape === NODE_SHAPE.CHOICE))
-    setCurrentIllustrationChoices(choices.filter((choice: Choice) => choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE))
+    const allChoices = getAllChoices(choice, randomResponse, linkedResponses, graph)
+    setChoices(allChoices)
 
     // Get student avatars
     let _students = getRandomStudents(linkedResponses.length + 1)
@@ -114,111 +55,17 @@ const QuestionComponent = ({ graph, uuid, id }: Props) => {
   }, [id])
 
   return (
-    <StyledConversation className='container'>
-      <div className='conversation'>
-        <div className='question'>
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            key={`teacher${id}`}
-            className="teacher"
-          >
-            {choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE ? t('conversation.illustration_on_blackboard') : choice.label}
-          </motion.h2>
-        </div>
-        <div className='answers'>
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0 }}
-            key={`student_${id ?? 0}`}
-            className="student"
-          >
-            {randomResponse?.label}
-          </motion.h2>
-          {linkedResponses.map((linkedResponse) =>
-            <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0 }}
-              key={`student_${linkedResponse.id}`}
-              className="student linkedResponse"
-            >
-              {linkedResponse.label}
-            </motion.h2>
-          )}
-        </div>
-      </div>
-      <div className='media'>
-        <div className='teacher'>
-          {avatar === 1 && (
-            <img className="teacher" src={teacherWoman} alt="Female avatar" />
-          )}
-          {avatar === 2 && (
-            <img className="teacher" src={teacherMan} alt="Male avatar" />
-          )}
-        </div>
-        <div className='illustrationContainer'>
-          {illustration && (
-            <img
-              className="illustration"
-              src={illustration.label}
-              alt={illustration.label || `${t('conversation.illustration')}`}
-            />
-          )}
-        </div>
-        <div className='students'>
-          {students.map((student) =>
-            <img key={student} className="student" alt="student avatar" src={student} />
-          )}
-        </div>
-      </div>
-      <div className='choices'>
-        <div className='questions'>
-          {currentChoices?.length > 0 && (
-            <>
-              {currentChoices.map((choice: Choice, key: number) => (
-                <motion.button
-                  className="btn-dark choice"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ delay: 0 }}
-                  key={`choice_${key}`}
-                  onClick={() =>
-                    history.push(`/conversation/${uuid}/${choice.id}`)
-                  }
-                >
-                  <p>{choice.label || t('conversation.missing_node_label')}</p>
-                </motion.button>
-              ))}
-            </>
-          )}
-        </div>
-        <div className='illustrations'>
-          {currentIllustrationChoices.map((illustrationChoice: Choice, key: number) =>
-            <motion.input
-              className='illustration'
-              type="image"
-              key={illustrationChoice.id}
-              src={illustrationChoice.label}
-              alt={illustrationChoice.label}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0 }}
-
-              onClick={(() => {
-                history.push(`/conversation/${uuid}/${illustrationChoice.id}`)
-              })}
-            ></motion.input>
-          )}
-        </div>
-      </div>
-    </StyledConversation>
+    <ErrorBoundary>
+      <Background elevation={16} sx={{ flexGrow: 1 }} >
+        <DialogueComponent
+          choice={choice}
+          response={randomResponse}
+          illustration={illustration}
+          students={students}
+        />
+      </Background>
+      <ChoicesComponent uuid={uuid} choices={choices} />
+    </ErrorBoundary>
   )
 }
 

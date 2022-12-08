@@ -20,6 +20,7 @@ export const Header = () => {
           <Typography
             variant='h6'
             noWrap
+            onClick={() => document.location = '/'}
             sx={{
               flexGrow: 1
             }}>

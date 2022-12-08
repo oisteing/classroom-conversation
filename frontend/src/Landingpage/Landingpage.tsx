@@ -1,28 +1,48 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Button, Paper, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
-import StyledLandingpage from './Landingpage.styled'
+const StyledLandingPage = styled(Paper)(({ theme }) => ({
+  width: '-webkit-fill-available',
+  minHeight: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  textAlign: 'center',
+  margin: theme.spacing(1),
+}))
 
 const Landingpage = () => {
   const history = useHistory()
   const { t } = useTranslation()
 
   return (
-    <StyledLandingpage>
+    <StyledLandingPage elevation={16}>
       <div>
-        <h1>{t('landingpage.title')}</h1>
-        <p>{t('landingpage.intro.part1')}</p>
+        <Typography variant='h1'>{t('landingpage.title')}</Typography>
+        <Typography variant='body1'>{t('landingpage.intro.part1')}</Typography>
 
-        <p>{t('landingpage.intro.part2')}</p>
+        <Typography variant='body1'>{t('landingpage.intro.part2')}</Typography>
         <br></br>
         <br></br>
-        <button className='btn-dark' onClick={() => history.push('/browse')}>{t('see_all_conversations')}</button>
+        <Button variant="contained" onClick={() => history.push('/browse')}>{t('see_all_conversations')}</Button>
       </div>
-      <p className="credits" onClick={() => history.push('/credits')}>
+      <Button
+        variant="outlined"
+        onClick={() => history.push('/credits')}
+        sx={{
+          position: 'fixed',
+          bottom: '5%',
+          display: 'flex',
+          alignSelf: 'center',
+          cursor: 'pointer'
+        }}
+      >
         ({t('credits')})
-      </p>
-    </StyledLandingpage>
+      </Button>
+    </StyledLandingPage>
   )
 }
 
