@@ -7,9 +7,9 @@ import nb_NO from './static/locales/nb_NO.json'
 import nn_NO from './static/locales/nn_NO.json'
 
 const resources = {
-  en_US,
   nb_NO,
   nn_NO,
+  en_US,
 }
 
 export const availableLanguages = Object.keys(resources)
@@ -19,7 +19,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: resources,
-    fallbackLng: availableLanguages[0] ?? 'en_US',
+    fallbackLng: availableLanguages[0] ?? 'nb_NO',
     supportedLngs: availableLanguages,
     nonExplicitSupportedLngs: true,
     debug: process.env.NODE_ENV === 'development',

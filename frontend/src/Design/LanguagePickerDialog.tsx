@@ -25,8 +25,8 @@ export const LanguagePickerDialog = (props: any) => {
   }
   const humanLanguages: any = {
     'en_US': 'English (US)',
-    'nb_NO': 'Norsk Bokmål',
-    'nn_NO': 'Nynorsk',
+    'nb_NO': 'Norsk (Bokmål)',
+    'nn_NO': 'Norsk (Nynorsk)',
   }
 
   return (
