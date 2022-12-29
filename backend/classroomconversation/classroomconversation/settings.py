@@ -119,8 +119,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "nn"
 LANGUAGES = (
-    ("nb", "Bokmål"),
-    ("nn", "Nynorsk"),
+    ("nb", "Norsk (Bokmål)"),
+    ("nn", "Norsk (Nynorsk)"),
 )
 
 LOCALE_PATHS = [
