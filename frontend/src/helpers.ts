@@ -1,16 +1,7 @@
 import { Choice, Choices, Response, Responses } from './types'
 
-import { SUBMIT_CONVERSATION_PATH } from './const'
+import { DEFAULT_AVATARS, GET_AVATAR_NAMES_BY_KIND_PATH, SUBMIT_CONVERSATION_PATH } from './const'
 import axios, { AxiosError, AxiosResponse } from 'axios'
-
-import studentGirl1 from './static/student_1.png'
-import studentGirl2 from './static/student_girl_2.png'
-import studentGirl3 from './static/student_girl_3.png'
-import studentGirl4 from './static/student_girl_4.png'
-import studentBoy1 from './static/student_boy_1.png'
-import studentBoy2 from './static/student_boy_2.png'
-import studentBoy3 from './static/student_boy_3.png'
-import student1 from './static/student_1.png'
 
 export const next = () => {}
 
@@ -103,9 +94,9 @@ export const getLastQuestion = (uuid: string) => {
   return dialog[dialog.length - 1]
 }
 
-export const getSelectedAvatar = (): number => {
+export const getSelectedAvatar = (): string => {
   const avatar = window.localStorage.getItem('avatar')
-  return avatar != null ? parseInt(avatar) : 1
+  return avatar != null ? avatar : 'teacher_man'
 }
 
 export const setSelectedStudent = (uuid: string, id: number): void => {
@@ -117,22 +108,37 @@ export const getSelectedStudent = (uuid: string): number => {
   return student != null ? parseInt(student) : 1
 }
 
-export const getRandomStudents = (count: number = 1): string[] => {
+export const getAvailableAvatars = (kind: string): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    if (!['teacher', 'student'].includes(kind)) reject(`Cannot get avatars by kind '${kind}' (invalid)`)
+    
+    // @ts-ignore
+    const csrftoken = getCsrfToken()
+    if (csrftoken) {
+      axios
+        .get(`${GET_AVATAR_NAMES_BY_KIND_PATH}/${kind}`, {
+          headers: { 'X-CSRFToken': csrftoken, mode: 'same-origin' },
+        })
+        .then((response: any) => {
+          const availableAvatars = response.data[kind]
+          if (!availableAvatars || availableAvatars.length < 1) {
+            resolve(DEFAULT_AVATARS[kind])
+          }
+          resolve(availableAvatars.map((name: string) => `/avatar/${name}`))
+        })
+        .catch((err: any) => reject(err))
+    } else {
+      reject('Failed to fetch CSRF token.')
+    }
+  })
+}
+
+export const selectRandomAvatars = (availableAvatars: string[], count: number = 1): string[] => {
   const avatars: string[] = []
-  const students = [
-    student1,
-    studentBoy1,
-    studentBoy2,
-    studentBoy3,
-    studentGirl1,
-    studentGirl2,
-    studentGirl3,
-    studentGirl4
-  ]
-  if (count > students.length) count = students.length
+  if (count > availableAvatars.length) count = availableAvatars.length
 
   for (let i=0; i < count; i++) {
-    let filtered = students.filter((student) => !avatars.includes(student))
+    let filtered = availableAvatars.filter((name: string) => !avatars.includes(name))
     avatars.push(filtered[Math.floor(Math.random() * filtered.length)])
   }
 

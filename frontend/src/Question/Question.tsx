@@ -11,7 +11,7 @@ import {
   Choice,
   Illustration,
 } from '../types'
-import { getRandomStudents } from '../helpers'
+import { getAvailableAvatars, selectRandomAvatars } from '../helpers'
 import { buildConversation, getAllChoices } from './utils'
 import { NODE_SHAPE } from '../const'
 
@@ -43,8 +43,14 @@ const QuestionComponent = ({ graph, uuid, id }: QuestionProps) => {
     setChoices(allChoices)
 
     // Get student avatars
-    let _students = getRandomStudents(linkedResponses.length + 1)
-    setStudents(_students)
+    getAvailableAvatars('student')
+      .then((availableAvatars: string[]) => {
+        let avatars = selectRandomAvatars(availableAvatars, linkedResponses.length + 1)
+        setStudents(avatars)
+      })
+      .catch((err: any) => {
+        console.warn(err)
+      })
 
     // @ts-ignore
     if (choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE) setIllustration(choice)
