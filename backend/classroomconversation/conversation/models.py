@@ -32,6 +32,25 @@ class Illustration(models.Model):
         return str(self.name)
 
 
+class Avatar(models.Model):
+    AVATAR_KINDS = (
+        ("teacher", "teacher"),
+        ("student", "student"),
+    )
+    id = models.AutoField(primary_key=True)
+    uuid = models.CharField(max_length=36, blank=False, unique=True)
+    name = models.CharField(max_length=48, blank=False, unique=True)
+    description = models.TextField(max_length=2000, blank=True)
+    kind = models.CharField(max_length=48, blank=False, choices=AVATAR_KINDS, default=AVATAR_KINDS[0][0])
+    selectable = models.BooleanField(default=True)
+    image = models.ImageField(upload_to="avatars/", blank=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return str(self.name)
+
+
 class CompletedConversation(models.Model):
     id = models.AutoField(primary_key=True)
     uuid = models.CharField(max_length=36, blank=False, unique=True)

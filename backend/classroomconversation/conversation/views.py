@@ -7,14 +7,14 @@ from rest_framework import viewsets, mixins
 
 from django.shortcuts import render, redirect
 from django.core.files import File
-from django.http import FileResponse, HttpResponseNotFound, HttpResponse, HttpResponseServerError
+from django.http import FileResponse, HttpResponseNotFound, HttpResponse, HttpResponseServerError, HttpResponseBadRequest, JsonResponse
 from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.decorators import login_required, permission_required
 
-from .forms import ConversationForm, IllustrationForm
-from .models import Conversation, Illustration, CompletedConversation
-from .serializers import ConversationSerializer, IllustrationSerializer, CompletedConversationSerializer
+from .forms import AvatarForm, ConversationForm, IllustrationForm
+from .models import Avatar, Conversation, Illustration, CompletedConversation
+from .serializers import AvatarSerializer, ConversationSerializer, IllustrationSerializer, CompletedConversationSerializer
 from .parser import graphml_to_json
 from .helpers import generate_heatmap_html, completed_conversation_to_csv
 
@@ -32,6 +32,13 @@ class ConversationDetailAPIView(viewsets.ReadOnlyModelViewSet):
 class IllustrationDetailAPIView(viewsets.ReadOnlyModelViewSet):
     queryset = Illustration.objects.all()
     serializer_class = IllustrationSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "uuid"
+
+
+class AvatarDetailAPIView(viewsets.ReadOnlyModelViewSet):
+    queryset = Avatar.objects.all()
+    serializer_class = AvatarSerializer
     permission_classes = [AllowAny]
     lookup_field = "uuid"
 
@@ -136,6 +143,57 @@ def get_illustration_by_name(request, image_name):
             image = illustration.first().image
             return FileResponse(image)
     
+    return HttpResponseNotFound()
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def add_avatar(request):
+    if request.method == "POST":
+        form = AvatarForm(request.POST, request.FILES)
+
+        try:
+            avatar = form.save(commit=False)
+            avatar.uuid = str(uuid.uuid4())
+            avatar.image = File(avatar.image)
+            avatar.save()
+            return redirect("avatars")
+        except Exception as error:
+            print(error)
+            raise ValueError("An error occurred while uploading the file")
+
+    form = AvatarForm()
+    return render(request, "upload_avatar.html", {"form": form})
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def get_all_avatars(request):
+    if request.method == "GET":
+        avatars = Avatar.objects.all().order_by("-created")
+        return render(request, "avatar_list.html", {"avatars": avatars})
+
+    return HttpResponseNotFound()
+
+
+def get_avatar_by_name(request, image_name):
+    if request.method == "GET":
+        avatar = Avatar.objects.filter(name=image_name)
+        if avatar.count() == 1:
+            image = avatar.first().image
+            return FileResponse(image)
+        
+    return HttpResponseNotFound()
+
+
+def get_avatar_names_by_kind(request, kind):
+    if request.method == "GET":
+        if kind not in ["teacher", "student"]:
+            return HttpResponseBadRequest("Invalid value for 'kind'", kind)
+
+        avatars = Avatar.objects.filter(kind=kind, selectable=True)
+        return JsonResponse({kind: [avatar.name for avatar in avatars]})
+
     return HttpResponseNotFound()
 
 

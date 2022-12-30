@@ -4,7 +4,7 @@ from django.core.files import File
 from urllib.parse import quote
 import re
 
-from .models import Conversation, Illustration
+from .models import Avatar, Conversation, Illustration
 
 from .validation import (
     has_invalid_image_sources,
@@ -30,6 +30,32 @@ class IllustrationForm(forms.ModelForm):
         labels = {
             "name": _("form.label.name"),
             "description": _("form.label.description"),
+            "image": _("form.label.image"),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        pattern = re.compile('[^a-zA-Z0-9_-]')
+        name = pattern.sub('', name)
+        name = quote(name)
+        name = name.strip()
+
+        return name
+
+
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model = Avatar
+        fields = (
+            "name",
+            "description",
+            "kind",
+            "image",
+        )
+        labels = {
+            "name": _("form.label.name"),
+            "description": _("form.label.description"),
+            "kind": _("table.label.kind"),
             "image": _("form.label.image"),
         }
 
