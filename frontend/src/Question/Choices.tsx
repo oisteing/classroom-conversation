@@ -16,7 +16,7 @@ type ChoicesProps = {
   choices: Array<Choice | Illustration>
 }
 
-type TextChoiceItemProps = {
+type ChoiceItemProps = {
   choice: Choice | Illustration
 }
 
@@ -37,21 +37,35 @@ const ChoiceGrid = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(2),
 }))
 
-const TextChoiceItem = ({ choice }: TextChoiceItemProps) => {
+const ChoiceItem = ({ choice }: ChoiceItemProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const open = Boolean(anchorEl)
   const handleClose = () => setAnchorEl(null)
+  const isIllustration = choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE
 
   return (
     <div>
-      <Typography
-        aria-owns={open ? 'mouse-over-popover' : undefined}
-        aria-haspopup="true"
-        onMouseEnter={(event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)}
-        onMouseLeave={handleClose}
-      >
-        {choice.label.length >= 50 ? `${choice.label.slice(0, 50)}...` : choice.label}
-      </Typography>
+      {isIllustration ? (
+        <div
+          aria-owns={open ? 'mouse-over-popover' : undefined}
+          aria-haspopup="true"
+          onMouseEnter={(event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)}
+          onMouseLeave={handleClose}>
+            <img
+              src={choice.label}
+              alt={choice.label}
+              style={{ maxHeight: '100px' }}/>
+          </div>
+      ) : (
+        <Typography
+          aria-owns={open ? 'mouse-over-popover' : undefined}
+          aria-haspopup="true"
+          onMouseEnter={(event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)}
+          onMouseLeave={handleClose}
+        >
+          {choice.label.length >= 50 ? `${choice.label.slice(0, 50)}...` : choice.label}
+        </Typography>
+      )}
       <Popover
         id="mouse-over-popover"
         sx={{
@@ -61,16 +75,23 @@ const TextChoiceItem = ({ choice }: TextChoiceItemProps) => {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: 'center',
+          horizontal: 'center',
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: 'center',
+          horizontal: 'center',
         }}
         disableRestoreFocus
       >
-        <Typography sx={{ p: 4 }} variant='h6'>{choice.label}</Typography>
+        {isIllustration ? (
+          <img
+            src={choice.label}
+            alt={choice.label}
+            style={{ maxHeight: '300px' }}/>
+        ) : (
+          <Typography sx={{ p: 4 }} variant='h6'>{choice.label}</Typography>
+        )}
       </Popover>
     </div>
   )
@@ -92,11 +113,7 @@ export const ChoicesComponent = ({ uuid, choices }: ChoicesProps) => {
                     sx={{ padding: '5px 5px 5px 5px' }}
                     onClick={() => history.push(`/conversation/${uuid}/${choice.id}`)}
                   >
-                    {
-                      choice.shape === NODE_SHAPE.ILLUSTRATION_CHOICE
-                        ? <img src={choice.label} alt={choice.label} style={{ maxHeight: '100px' }}/>
-                        : <TextChoiceItem choice={choice} />
-                    }
+                    <ChoiceItem choice={choice} />
                   </Paper>
               </Grid>
             ))
