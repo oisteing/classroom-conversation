@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+<table class="uploads table">
+  <tr>
+    <th>{% trans "table.label.date" %}</th>
+    <th>{% trans "table.label.name" %}</th>
+    <th>{% trans "table.label.filename" %}</th>
+    <th>{% trans "table.label.description" %}</th>
+    <th>{% trans "table.label.selectable" %}</th>
+    <th>{% trans "table.label.kind" %}</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  {% for avatar in avatars %}
+  <tr>
+    <td>{{ avatar.created|date:"d.m.Y" }} {{ avatar.created|time:"H:i" }}</td>
+    <td>{{ avatar.name }}</td>
+    <td>{{ avatar.image.name }}</td>
+    <td>{{ avatar.description }}</td>
+    <td>{{ avatar.selectable }}</td>
+    <td>{{ avatar.kind }}</td>
+    <td><a href="/avatar/{{ avatar.name }}">{% trans "table.action.download" %}</a></td>
+    <td>
+      <button id="copy-link" onclick="copyLinkToClipboard('/avatar/{{ avatar.name }}');">{% trans "table.action.copy" %}</button>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

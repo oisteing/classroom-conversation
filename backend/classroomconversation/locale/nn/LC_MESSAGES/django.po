@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-29 17:09+0000\n"
+"POT-Creation-Date: 2022-12-30 16:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,63 +12,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: conversation/forms.py:31 conversation/forms.py:56
+#: conversation/forms.py:31 conversation/forms.py:55 conversation/forms.py:80
 msgid "form.label.name"
 msgstr "Eit namn"
 
-#: conversation/forms.py:32 conversation/forms.py:57
+#: conversation/forms.py:32 conversation/forms.py:56 conversation/forms.py:81
 msgid "form.label.description"
 msgstr "Beskriving"
 
-#: conversation/forms.py:33
+#: conversation/forms.py:33 conversation/forms.py:57
 msgid "form.label.image"
 msgstr "Illustrasjon"
 
-#: conversation/forms.py:58
+#: conversation/forms.py:82
 msgid "form.label.document"
 msgstr "Dokument"
 
-#: conversation/forms.py:59
+#: conversation/forms.py:83
 msgid "form.label.uniform_probability"
 msgstr "Uniform sannsyn"
 
-#: conversation/forms.py:69
+#: conversation/forms.py:93
 msgid "validation.doc.all.nodes.connected"
 msgstr "Noen noder mangler kanter - du kan ikke ha løse noder!"
 
-#: conversation/forms.py:74
+#: conversation/forms.py:98
 msgid "validation.doc.broken.conversation"
 msgstr "Alle noder (diamant og firkant) må være koblet til en node (inn, ut)"
 
-#: conversation/forms.py:79
+#: conversation/forms.py:103
 msgid "validation.doc.one.star"
 msgstr "Startnoden må være en stjerne og det kan bare finnes en"
 
-#: conversation/forms.py:83
+#: conversation/forms.py:107
 msgid "validation.doc.end.node"
 msgstr "Du må minst ha en sluttnode (må være en 8-kant)"
 
-#: conversation/forms.py:87
+#: conversation/forms.py:111
 msgid "validation.doc.illegal.shapes"
 msgstr ""
 "Du har ulovlige nodetyper. Du kan bare ha stjerne (start), diamant (elev), "
 "rund firkant (lærer) og 8-kant(slutt)"
 
-#: conversation/forms.py:92
+#: conversation/forms.py:116
 msgid "validation.doc.missing.node.label"
 msgstr "Noen av kantane mangler label"
 
-#: conversation/forms.py:97
+#: conversation/forms.py:121
 msgid "validation.doc.missing.probability"
 msgstr ""
 "Noen av kantene fra lærer node til elevnode mangler sannsynlighet eller har "
 "ikke riktig format (0-1)"
 
-#: conversation/forms.py:100
+#: conversation/forms.py:124
 msgid "validation.doc.probability.sum"
 msgstr "Noen av nodene dine summerer ikke til 100%"
 
-#: conversation/forms.py:104
+#: conversation/forms.py:128
 msgid "validation.doc.illustration.invalid_src"
 msgstr "Ugyldig kilde for bildet"
 
@@ -85,7 +85,7 @@ msgstr "Val"
 msgid "csv.date"
 msgstr "Dato"
 
-#: conversation/helpers.py:329 conversation/views.py:162
+#: conversation/helpers.py:329 conversation/views.py:209
 msgid "table.label.choice"
 msgstr "Val"
 
@@ -97,8 +97,8 @@ msgstr "Det finnes ingen startnode (stjerne)"
 msgid "validation.doc.multi.star"
 msgstr "Det finnes flere startnoder (stjerne). Det kan kun eksistere én"
 
-#: conversation/views.py:158 templates/conversation_list.html:9
-#: templates/illustration_list.html:9
+#: conversation/views.py:205 templates/avatar_list.html:9
+#: templates/conversation_list.html:9 templates/illustration_list.html:9
 msgid "table.label.date"
 msgstr "Dato"
 
@@ -110,9 +110,41 @@ msgstr "Du har ikkje dei riktige tilgangane"
 msgid "404"
 msgstr "404 - Ånei! En feil har oppstått :("
 
+#: templates/avatar_list.html:10 templates/conversation_list.html:10
+#: templates/illustration_list.html:10
+msgid "table.label.name"
+msgstr "Namn"
+
+#: templates/avatar_list.html:11 templates/illustration_list.html:11
+msgid "table.label.filename"
+msgstr "Filnamn"
+
+#: templates/avatar_list.html:12 templates/conversation_list.html:11
+#: templates/illustration_list.html:12
+msgid "table.label.description"
+msgstr "Beskriving"
+
+#: templates/avatar_list.html:13
+msgid "table.label.selectable"
+msgstr "Aktiv"
+
+#: templates/avatar_list.html:14
+msgid "table.label.kind"
+msgstr "Type"
+
+#: templates/avatar_list.html:27 templates/conversation_list.html:21
+#: templates/illustration_list.html:23
+msgid "table.action.download"
+msgstr "Last ned"
+
+#: templates/avatar_list.html:29 templates/conversation_list.html:28
+#: templates/illustration_list.html:25
+msgid "table.action.copy"
+msgstr "Kopier lenke"
+
 #: templates/base.html:63
 msgid "navigation.conversation"
-msgstr "Alle samtalar"
+msgstr "Samtalar"
 
 #: templates/base.html:68
 msgid "navigation.upload_conversation"
@@ -120,51 +152,39 @@ msgstr "Last opp samtale"
 
 #: templates/base.html:73
 msgid "navigation.illustration"
-msgstr "Alle illustrasjoner"
+msgstr "Illustrasjoner"
 
 #: templates/base.html:78
 msgid "navigation.upload_illustration"
 msgstr "Last opp illustrasjon"
 
-#: templates/base.html:83 templates/metrics_overview.html:22
+#: templates/base.html:83
+msgid "navigation.avatar"
+msgstr "Avatarer"
+
+#: templates/base.html:88
+msgid "navigation.upload_avatar"
+msgstr "Last opp avatar"
+
+#: templates/base.html:93 templates/metrics_overview.html:22
 msgid "navigation.view_metrics"
 msgstr "Vis statistikk"
 
-#: templates/base.html:100
+#: templates/base.html:110
 msgid "form.label.button.language"
 msgstr "Bytt"
 
-#: templates/base.html:106
+#: templates/base.html:116
 msgid "navigation.administration"
 msgstr "Administrasjon"
 
-#: templates/base.html:111
+#: templates/base.html:121
 msgid "profile.hello"
 msgstr "Hei, "
-
-#: templates/conversation_list.html:10 templates/illustration_list.html:10
-msgid "table.label.name"
-msgstr "Namn"
-
-#: templates/conversation_list.html:11 templates/illustration_list.html:12
-msgid "table.label.description"
-msgstr "Beskriving"
-
-#: templates/conversation_list.html:21 templates/illustration_list.html:23
-msgid "table.action.download"
-msgstr "Last ned"
 
 #: templates/conversation_list.html:25
 msgid "table.action.start"
 msgstr "Start samtale"
-
-#: templates/conversation_list.html:28 templates/illustration_list.html:25
-msgid "table.action.copy"
-msgstr "Kopier lenke"
-
-#: templates/illustration_list.html:11
-msgid "table.label.filename"
-msgstr "Filnamn"
 
 #: templates/metrics_overview.html:7
 msgid "metrics.conversations"
@@ -186,12 +206,10 @@ msgstr "Slett registrerte samtaler"
 msgid "metrics.responses_for"
 msgstr "Responsar for"
 
-#: templates/upload_conversation.html:11 templates/upload_illustration.html:11
+#: templates/upload_avatar.html:11 templates/upload_conversation.html:11
+#: templates/upload_illustration.html:11
 msgid "form.label.button"
 msgstr "Last opp"
-
-#~ msgid "navigation.upload"
-#~ msgstr "Last opp"
 
 #~ msgid "table.action.show_metrics"
 #~ msgstr "Vis statistikk"
@@ -210,6 +228,3 @@ msgstr "Last opp"
 
 #~ msgid "validation.doc.node.connected.to"
 #~ msgstr "har en ugyldig kobling til"
-
-#~ msgid "table.label.start"
-#~ msgstr "Test samtale"
