@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Box, Button, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
@@ -10,6 +10,7 @@ import {
   hasDialogRecorded,
   getLastQuestion,
   getSelectedAvatar,
+  getAvailableAvatars,
 } from './../helpers'
 import { StartNode, UrlParams, Conversation } from './../types'
 
@@ -17,13 +18,11 @@ import { Paper } from '../Design/Paper'
 import Loading from './../Loading/Loading'
 import Notfound from './../Notfound/Notfound'
 
-import teacherWoman from './../static/teacher_woman.png'
-import teacherMan from './../static/teacher_man.png'
 import { useTranslation } from 'react-i18next'
 
-const selectAvatar = (id: number, setAvatar: Function) => {
-  window.localStorage.setItem('avatar', '' + id)
-  setAvatar(id)
+const selectAvatar = (name: string, setAvatar: Function) => {
+  window.localStorage.setItem('avatar', name)
+  setAvatar(name)
 }
 
 const StyledAvatars = styled('div')(({ theme }) => ({
@@ -42,7 +41,8 @@ const StyledAvatars = styled('div')(({ theme }) => ({
 const Start = () => {
   const history = useHistory()
   const { uuid } = useParams<UrlParams>()
-  const [selectedAvatar, setAvatar] = useState<number>(getSelectedAvatar())
+  const [availableAvatars, setAvailableAvatars] = useState<string[]>()
+  const [selectedAvatar, setAvatar] = useState<string>(getSelectedAvatar())
   const [hasSubmitted, setHasSubmitted] =
     useLocalStorage<boolean>('hasSubmitted')
   const { t } = useTranslation()
@@ -51,6 +51,13 @@ const Start = () => {
     `/api/document/${uuid}`,
     uuid
   )
+
+  useEffect(() => {
+    getAvailableAvatars('teacher')
+      .then((_availableAvatars: string[]) => {
+        setAvailableAvatars(_availableAvatars)
+      })
+  }, [uuid])
   
   if (loading) {
     return <Loading />
@@ -71,18 +78,14 @@ const Start = () => {
           <Typography variant='h6'>{startNode.label}</Typography>
         </Box>
         <StyledAvatars>
-          <img
-            className={`avatar${selectedAvatar === 1 ? ' selected' : ''}`}
-            src={teacherWoman}
-            onClick={() => selectAvatar(1, setAvatar)}
-            alt="Female teacher avatar"
-          />
-          <img
-            className={`avatar${selectedAvatar === 2 ? ' selected' : ''}`}
-            src={teacherMan}
-            onClick={() => selectAvatar(2, setAvatar)}
-            alt="Male teacher avatar"
-          />
+          {availableAvatars && availableAvatars.map((avatar: string) => (
+            <img
+              className={`avatar${selectedAvatar === avatar ? ' selected' : ''}`}
+              src={avatar}
+              onClick={() => selectAvatar(avatar, setAvatar)}
+              alt={`Avatar ${avatar}`}
+            />
+          ))}
         </StyledAvatars>
         <Stack direction='column' spacing={2} sx={{ marginTop: '2vh'}}>
           <Button

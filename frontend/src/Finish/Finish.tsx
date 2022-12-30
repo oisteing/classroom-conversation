@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Box, Button, Stack, Typography } from '@mui/material'
@@ -11,7 +11,8 @@ import {
   getSelectedAvatar,
   prepareConversationForSubmission,
   submitConversation,
-  getRandomStudents,
+  getAvailableAvatars,
+  selectRandomAvatars,
 } from './../helpers'
 import { UrlParams, Choices, Responses } from './../types'
 import { useLocalStorage } from '../hooks'
@@ -20,8 +21,6 @@ import { useTranslation } from 'react-i18next'
 import { Paper } from '../Design/Paper'
 
 import clock from './../static/clock.png'
-import teacherFemale from './../static/teacher_woman.png'
-import teacherMale from './../static/teacher_man.png'
 
 type FinishProps = {
   name: string
@@ -36,10 +35,9 @@ const Finish = ({ name, intro, choices, responses }: FinishProps) => {
   const { t } = useTranslation()
   const [hasSubmitted, setHasSubmitted] =
     useLocalStorage<boolean>('hasSubmitted')
+  const [studentAvatar, setStudentAvatar] = useState<string>('')
 
-  const teacherAvatar: string =
-    getSelectedAvatar() === 1 ? teacherFemale : teacherMale
-  const studentAvatar: string = getRandomStudents(1)[0]
+  const teacherAvatar: string = getSelectedAvatar()
   const finishedAt = new Date().toISOString()
   const pdfFileName = `conversation-${finishedAt}.pdf`
 
@@ -49,6 +47,17 @@ const Finish = ({ name, intro, choices, responses }: FinishProps) => {
     submitConversation(uuid, choiceHistory)
     setHasSubmitted(true)
   }
+
+  useEffect(() => {
+    getAvailableAvatars('student')
+      .then((availableAvatars: string[]) => {
+        let avatars = selectRandomAvatars(availableAvatars, 1)
+        setStudentAvatar(avatars[0])
+      })
+      .catch((err: any) => {
+        console.warn(err)
+      })
+  }, [uuid])
 
   return (
     <Paper>

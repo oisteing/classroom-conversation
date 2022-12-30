@@ -5,9 +5,6 @@ import { motion } from 'framer-motion'
 import { PauseProps } from './../types'
 import { getSelectedAvatar } from './../helpers'
 
-import teacherWoman from './../static/teacher_woman.png'
-import teacherMan from './../static/teacher_man.png'
-
 import { StyledPause, StyledAlternatives } from './Pause.styled'
 import { useTranslation } from 'react-i18next'
 
@@ -40,8 +37,7 @@ const Pause = ({ uuid, id, next, current }: PauseProps) => {
       </motion.h2>
 
       <StyledAlternatives>
-        {avatar === 1 && <img src={teacherWoman} alt="Female avatar" />}
-        {avatar === 2 && <img src={teacherMan} alt="Male avatar" />}
+        <img src={avatar} alt={`Avatar ${avatar}`} />
 
         <div className="alternatives">
           <motion.button

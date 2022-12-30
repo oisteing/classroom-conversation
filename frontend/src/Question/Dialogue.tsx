@@ -12,8 +12,6 @@ import {
   Illustration,
 } from '../types'
 
-import teacherWoman from './../static/teacher_woman.png'
-import teacherMan from './../static/teacher_man.png'
 import blackboard from '../static/background-small.png'
 
 type ConversationProps = {
@@ -52,7 +50,7 @@ const AvatarStyle = {
 
 export const DialogueComponent = ({ choice, response, illustration, students }: ConversationProps) => {
   const { t } = useTranslation()
-  const avatar = getSelectedAvatar() === 1 ? teacherWoman : teacherMan
+  const avatar = getSelectedAvatar()
 
   return (
     <ErrorBoundary>
