@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
+<a class="btn btn-primary" href="/avatars/add" role="button">{% trans "navigation.upload_avatar" %}</a>
 <table class="uploads table">
   <tr>
     <th>{% trans "table.label.date" %}</th>
@@ -12,6 +13,7 @@
     <th>{% trans "table.label.description" %}</th>
     <th>{% trans "table.label.selectable" %}</th>
     <th>{% trans "table.label.kind" %}</th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -27,6 +29,9 @@
     <td><a href="/avatar/{{ avatar.name }}">{% trans "table.action.download" %}</a></td>
     <td>
       <button id="copy-link" onclick="copyLinkToClipboard('/avatar/{{ avatar.name }}');">{% trans "table.action.copy" %}</button>
+    </td>
+    <td>
+      <a href="/avatars/{{ avatar.uuid }}/edit">{% trans "table.action.edit" %}</a>
     </td>
   </tr>
   {% endfor %}

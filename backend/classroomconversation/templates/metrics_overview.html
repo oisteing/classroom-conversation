@@ -15,22 +15,28 @@
     <th></th>
   </tr>
   {% for conversation in conversations %}
-  <tr>
-    <td>{{ conversation.uuid }}</td>
-    <td>{{ conversation.name }}</td>
-    <td>
-      <a href="/metrics/{{ conversation.uuid }}">{% trans "navigation.view_metrics" %}</a>
-    </td>
-    <td>
-      <a href="/metrics/{{ conversation.uuid }}/export">{% trans "navigation.export_metrics" %}</a>
-    </td>
-    <td>
-      <form class="delete-metrics" action="/metrics/{{ conversation.uuid }}/delete" method="post">
-        {% csrf_token %}
-        <button type="submit">{% trans "navigation.delete_metrics" %}</button>
-      </form>
-    </td>
-  </tr>
+  <form name="deleteMetrics-{{conversation.uuid}}" class="delete-metrics" action="/metrics/{{ conversation.uuid }}/delete" method="post">
+    {% csrf_token %}
+    <tr>
+      <td>{{ conversation.uuid }}</td>
+      <td>{{ conversation.name }}</td>
+      <td>
+        <a href="/metrics/{{ conversation.uuid }}">{% trans "navigation.view_metrics" %}</a>
+      </td>
+      <td>
+        <a href="/metrics/{{ conversation.uuid }}/export">{% trans "navigation.export_metrics" %}</a>
+      </td>
+      <td>
+        <button type="button" onclick='if(confirm(`{% trans "table.action.confirm_delete" %}`)) document[`deleteMetrics-{{conversation.uuid}}`].submit();' class="btn btn-danger btn-sm">{% trans "navigation.delete_metrics" %}</button>
+      </td>
+    </tr>
+  </form>
   {% endfor %}
 </table>
+
+{% if message %}
+<div class="alert alert-primary" role="alert">
+  {{message}}
+</div>
+{% endif %}
 {% endblock %}
