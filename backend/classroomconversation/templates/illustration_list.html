@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
+<a class="btn btn-primary" href="/illustrations/add" role="button">{% trans "navigation.upload_illustration" %}</a>
 <table class="uploads table">
   <tr>
     <th>{% trans "table.label.date" %}</th>
@@ -13,18 +14,28 @@
     <th></th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
   {% for illustration in illustrations %}
   <tr>
     <td>{{ illustration.created|date:"d.m.Y" }} {{ illustration.created|time:"H:i" }}</td>
-    <td>{{ illustration.name}}</td>
-    <td>{{ illustration.image.name}}</td>
-    <td>{{ illustration.description}}</td>
+    <td>{{ illustration.name }}</td>
+    <td>{{ illustration.image.name }}</td>
+    <td>{{ illustration.description }}</td>
     <td><a href="/illustration/{{ illustration.name }}">{% trans "table.action.download" %}</a></td>
     <td>
       <button id="copy-link" onclick="copyLinkToClipboard('/illustration/{{ illustration.name }}');">{% trans "table.action.copy" %}</button>
     </td>
+    <td>
+      <a href="/illustrations/{{ illustration.uuid }}/edit">{% trans "table.action.edit" %}</a>
+    </td>
   </tr>
   {% endfor %}
 </table>
+
+{% if message %}
+<div class="alert alert-primary" role="alert">
+  {{message}}
+</div>
+{% endif %}
 {% endblock %}

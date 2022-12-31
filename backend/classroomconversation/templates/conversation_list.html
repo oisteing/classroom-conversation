@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
+<a class="btn btn-primary" href="/conversations/add" role="button">{% trans "navigation.upload_conversation" %}</a>
 <table class="uploads table">
   <tr>
     <th>{% trans "table.label.date" %}</th>
@@ -12,12 +13,13 @@
     <th></th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
   {% for conversation in conversations %}
   <tr>
     <td>{{ conversation.created|date:"d.m.Y" }} {{ conversation.created|time:"H:i" }}</td>
-    <td>{{ conversation.name}}</td>
-    <td>{{ conversation.description}}</td>
+    <td>{{ conversation.name }}</td>
+    <td>{{ conversation.description }}</td>
     <td><a href="/conversations/{{ conversation.uuid }}">{% trans "table.action.download" %}</a></td>
     <td>
       <a
@@ -26,6 +28,9 @@
     </td>
     <td>
       <button id="copy-link" onclick="copyLinkToClipboard('/conversation/{{ conversation.uuid }}/start');">{% trans "table.action.copy" %}</button>
+    </td>
+    <td>
+      <a href="/conversations/{{ conversation.uuid }}/edit">{% trans "table.action.edit" %}</a>
     </td>
   </tr>
   {% endfor %}

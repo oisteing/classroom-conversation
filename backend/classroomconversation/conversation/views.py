@@ -74,14 +74,10 @@ def add_conversation(request):
             return redirect("conversations")
         else:
             # TODO: pass errors
-            return render(request, "upload_conversation.html", {"form": form})
+            return render(request, "upload_document.html", {"form": form})
 
     form = ConversationForm()
-    return render(request, "upload_conversation.html", {"form": form})
-
-
-# TODO: Update (PATCH) document
-# TODO: Delete document
+    return render(request, "upload_document.html", {"form": form})
 
 
 @login_required(login_url=LOGIN_URL)
@@ -91,7 +87,7 @@ def get_all_conversations(request):
         conversations = Conversation.objects.all().order_by("-created")
         return render(request, "conversation_list.html", {"conversations": conversations})
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -102,7 +98,35 @@ def get_conversation_by_id(request, uuid):
         document = conversation.first().document
         return FileResponse(document)
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def edit_conversation_by_id(request, uuid):
+    if request.method in ["GET", "POST"]:
+        message = None
+        try:
+            conversation = Conversation.objects.filter(uuid=uuid).first()
+            form = ConversationForm(instance=conversation)
+            if request.method == "GET":
+                return render(request, "upload_document.html", {"form": form})
+            if request.method == "POST":
+                form = ConversationForm(request.POST, request.FILES, instance=conversation)
+
+                if form.is_valid():
+                    conversation = form.save(commit=False)
+                    if "document" in form.changed_data or "uniform_probability" in form.changed_data:
+                        conversation.json, conversation.errors = graphml_to_json(
+                            File(conversation.document), conversation.uniform_probability
+                        )
+                    conversation.save()
+                    message = _("form.response.document_updated")
+                    
+                return render(request, "upload_document.html", {"form": form, "message": message})
+        except:
+            pass
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -123,7 +147,7 @@ def add_illustration(request):
             raise ValueError("An error occured while uploading the file")
         
     form = IllustrationForm()
-    return render(request, "upload_illustration.html", {"form": form})
+    return render(request, "upload_document.html", {"form": form})
 
 
 @login_required(login_url=LOGIN_URL)
@@ -133,7 +157,7 @@ def get_all_illustrations(request):
         illustrations = Illustration.objects.all().order_by("-created")
         return render(request, "illustration_list.html", {"illustrations": illustrations})
     
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 def get_illustration_by_name(request, image_name):
@@ -143,7 +167,31 @@ def get_illustration_by_name(request, image_name):
             image = illustration.first().image
             return FileResponse(image)
     
-    return HttpResponseNotFound()
+    return render(request, "404.html")
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def edit_illustration_by_id(request, uuid):
+    if request.method in ["GET", "POST"]:
+        message = None
+        try:
+            illustration = Illustration.objects.filter(uuid=uuid).first()
+            form = IllustrationForm(instance=illustration)
+            if request.method == "GET":
+                return render(request, "upload_document.html", {"form": form})
+            if request.method == "POST":
+                form = IllustrationForm(request.POST, request.FILES, instance=illustration)
+
+                if form.is_valid():
+                    illustration = form.save(commit=False)
+                    illustration.save()
+                    message = _("form.response.document_updated")
+                    
+                return render(request, "upload_document.html", {"form": form, "message": message})
+        except:
+            pass
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -163,7 +211,7 @@ def add_avatar(request):
             raise ValueError("An error occurred while uploading the file")
 
     form = AvatarForm()
-    return render(request, "upload_avatar.html", {"form": form})
+    return render(request, "upload_document.html", {"form": form})
 
 
 @login_required(login_url=LOGIN_URL)
@@ -173,7 +221,7 @@ def get_all_avatars(request):
         avatars = Avatar.objects.all().order_by("-created")
         return render(request, "avatar_list.html", {"avatars": avatars})
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 def get_avatar_by_name(request, image_name):
@@ -183,7 +231,7 @@ def get_avatar_by_name(request, image_name):
             image = avatar.first().image
             return FileResponse(image)
         
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 def get_avatar_names_by_kind(request, kind):
@@ -194,7 +242,31 @@ def get_avatar_names_by_kind(request, kind):
         avatars = Avatar.objects.filter(kind=kind, selectable=True)
         return JsonResponse({kind: [avatar.name for avatar in avatars]})
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
+
+
+@login_required(login_url=LOGIN_URL)
+@permission_required("user.is_staff", raise_exception=True)
+def edit_avatar_by_id(request, uuid):
+    if request.method in ["GET", "POST"]:
+        message = None
+        try:
+            avatar = Avatar.objects.filter(uuid=uuid).first()
+            form = AvatarForm(instance=avatar)
+            if request.method == "GET":
+                return render(request, "upload_document.html", {"form": form})
+            if request.method == "POST":
+                form = AvatarForm(request.POST, request.FILES, instance=avatar)
+
+                if form.is_valid():
+                    avatar = form.save(commit=False)
+                    avatar.save()
+                    message = _("form.response.document_updated")
+                    
+                return render(request, "upload_document.html", {"form": form, "message": message})
+        except:
+            pass
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -217,12 +289,13 @@ def metrics_view(request, uuid):
             # find the longest conversation
             if completed_conversations.count() >= 1:
                 max_len = max([len(conversation.choices) for conversation in completed_conversations])
+                completed_conversations = [cc for cc in completed_conversations if len(cc.choices) > 0]
                 localized_choice_str = _('table.label.choice')
                 table_headers.extend([f"{localized_choice_str} {i + 1}" for i in range(0, max_len)])
 
             return render(request, "metrics_view.html", {"conversation_name": conversation_name, "completed_conversations": completed_conversations, "table_headers": table_headers, "heatmap": heatmap})
     
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -235,6 +308,7 @@ def metrics_export(request, uuid):
             # in the event that the conversastion has been deleted
             conversation_name = uuid
         completed_conversations = CompletedConversation.objects.filter(conversation=uuid).order_by("-created")
+        completed_conversations = [cc for cc in completed_conversations if len(cc.choices) > 0]
         now = datetime.now().isoformat()
         data = completed_conversation_to_csv(completed_conversations)
         filename = f"export_metrics_{conversation_name}-{uuid}_{now}.csv"
@@ -248,7 +322,7 @@ def metrics_export(request, uuid):
 
         return response
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
 
 
 @login_required(login_url=LOGIN_URL)
@@ -257,9 +331,12 @@ def metrics_delete(request, uuid):
     if request.method == "POST":
         try:
             CompletedConversation.objects.filter(conversation=uuid).delete()
-            return redirect("metrics_overview")
-        except:
+
+            conversations = Conversation.objects.all().order_by("-created")
+            return render(request, "metrics_overview.html", {"conversations": conversations, "message": _("form.response.document_deleted")})
+        except Exception as e:
+            print(e)
             return HttpResponseServerError()
 
-    return HttpResponseNotFound()
+    return render(request, "404.html")
         

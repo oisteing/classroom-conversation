@@ -63,29 +63,14 @@
           >{% trans "navigation.conversation" %}</a
         >
         <a
-          class="nav-item nav-link {% if request.get_full_path == '/conversations/add' %}active{% endif %}"
-          href="/conversations/add"
-          >{% trans "navigation.upload_conversation" %}</a
-        >
-        <a
           class="nav-item nav-link {% if request.get_full_path == '/illustrations' %}active{% endif %}"
           href="/illustrations"
           >{% trans "navigation.illustration" %}</a
         >
         <a
-          class="nav-item nav-link {% if request.get_full_path == '/illustrations/add' %}active{% endif %}"
-          href="/illustrations/add"
-          >{% trans "navigation.upload_illustration" %}</a
-        >
-        <a
           class="nav-item nav-link {% if request.get_full_path == '/avatars' %}active{% endif %}"
           href="/avatars"
           >{% trans "navigation.avatar" %}</a
-        >
-        <a
-          class="nav-item nav-link {% if request.get_full_path == '/avatars/add' %}active{% endif %}"
-          href="/avatars/add"
-          >{% trans "navigation.upload_avatar" %}</a
         >
         <a
           class="nav-item nav-link {% if request.get_full_path == '/metrics' %}active{% endif %}"
